@@ -1,0 +1,2137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Diet & Fitness Planner</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial, sans-serif;
+    background:#f3f7f5;
+    color:#222;
+    transition:.3s;
+}
+
+body.dark{
+    background:#121212;
+    color:#eee;
+}
+
+header{
+    background:linear-gradient(135deg,#16a085,#27ae60);
+    color:white;
+    padding:25px;
+    text-align:center;
+}
+
+header h1{
+    font-size:32px;
+}
+
+header p{
+    margin-top:8px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.dark .card{
+    background:#1f1f1f;
+}
+
+h2{
+    margin-bottom:15px;
+    color:#16a085;
+}
+
+.dark h2{
+    color:#2ecc71;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+input,select{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    font-size:15px;
+}
+
+.dark input,
+.dark select{
+    background:#292929;
+    color:white;
+    border-color:#555;
+}
+
+button{
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    background:#16a085;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:12px;
+}
+
+button:hover{
+    background:#12876f;
+}
+
+.top-buttons{
+    text-align:center;
+    margin:15px;
+}
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+
+.stat{
+    padding:20px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#e8fff5,#f7fffb);
+    text-align:center;
+}
+
+.dark .stat{
+    background:#292929;
+}
+
+.stat h3{
+    color:#777;
+    font-size:15px;
+}
+
+.stat strong{
+    display:block;
+    font-size:28px;
+    margin-top:8px;
+    color:#16a085;
+}
+
+.bmi-wrapper{
+    text-align:center;
+}
+
+.bmi-gauge{
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    margin:20px auto;
+    background:conic-gradient(
+        #3498db 0deg 60deg,
+        #2ecc71 60deg 120deg,
+        #f1c40f 120deg 180deg,
+        #e67e22 180deg 240deg,
+        #e74c3c 240deg 360deg
+    );
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.bmi-inner{
+    width:165px;
+    height:165px;
+    border-radius:50%;
+    background:white;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.dark .bmi-inner{
+    background:#1f1f1f;
+}
+
+.bmi-inner strong{
+    font-size:35px;
+    color:#16a085;
+}
+
+.progress{
+    height:18px;
+    background:#ddd;
+    border-radius:20px;
+    overflow:hidden;
+    margin:12px 0;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:#16a085;
+    transition:1s;
+}
+
+.diet-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:18px;
+}
+
+.diet-card{
+    border-radius:15px;
+    overflow:hidden;
+    background:#f8f8f8;
+}
+
+.dark .diet-card{
+    background:#292929;
+}
+
+.diet-card img{
+    width:100%;
+    height:150px;
+    object-fit:cover;
+}
+
+.diet-card div{
+    padding:15px;
+}
+
+.food-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;
+}
+
+.result-box{
+    background:#ecfdf5;
+    padding:15px;
+    border-radius:12px;
+    margin-top:15px;
+}
+
+.dark .result-box{
+    background:#263c34;
+}
+
+.workout-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+
+.workout{
+    padding:18px;
+    border-radius:15px;
+    background:#eefaf6;
+}
+
+.dark .workout{
+    background:#292929;
+}
+
+.calendar{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+}
+
+.day{
+    min-height:75px;
+    padding:8px;
+    background:#f5f5f5;
+    border-radius:8px;
+    font-size:12px;
+}
+
+.dark .day{
+    background:#292929;
+}
+
+.done{
+    background:#c8f7df !important;
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.badge{
+    padding:15px;
+    border-radius:15px;
+    background:#eee;
+    min-width:130px;
+    text-align:center;
+}
+
+.badge.unlocked{
+    background:#fff2b3;
+}
+
+.dark .badge{
+    background:#292929;
+}
+
+.dark .badge.unlocked{
+    background:#5c4c00;
+}
+
+.shopping-list{
+    columns:2;
+    line-height:2;
+}
+
+footer{
+    text-align:center;
+    padding:25px;
+    color:#777;
+}
+
+@media(max-width:600px){
+
+    header h1{
+        font-size:24px;
+    }
+
+    .calendar{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .shopping-list{
+        columns:1;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>🥗 Smart Diet & Fitness Planner</h1>
+
+<p>AI-style Personalized Diet, Fitness & Health Dashboard</p>
+
+</header>
+
+<div class="top-buttons">
+
+<button onclick="toggleDark()">🌙 Dark Mode</button>
+
+<button onclick="window.print()">🖨️ Print / Save PDF</button>
+
+</div>
+
+<div class="container">
+
+<!-- PROFILE -->
+
+<div class="card">
+
+<h2>👤 Your Profile</h2>
+
+<div class="form-grid">
+
+<div>
+<label>Language</label>
+<select id="language">
+<option value="en">English</option>
+<option value="te">తెలుగు</option>
+</select>
+</div>
+
+<div>
+<label>Age</label>
+<input type="number" id="age" min="10" max="100">
+</div>
+
+<div>
+<label>Gender</label>
+<select id="gender">
+<option value="male">Male</option>
+<option value="female">Female</option>
+</select>
+</div>
+
+<div>
+<label>Height (cm)</label>
+<input type="number" id="height">
+</div>
+
+<div>
+<label>Weight (kg)</label>
+<input type="number" id="weight">
+</div>
+
+<div>
+<label>Activity Level</label>
+
+<select id="activity">
+
+<option value="1.2">1 - Very Low</option>
+<option value="1.25">2 - Low</option>
+<option value="1.3">3 - Light</option>
+<option value="1.375">4 - Moderate</option>
+<option value="1.45">5 - Active</option>
+<option value="1.5">6 - Very Active</option>
+<option value="1.6">7 - High</option>
+<option value="1.7">8 - Very High</option>
+<option value="1.8">9 - Athlete</option>
+<option value="1.9">10 - Professional Athlete</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>Goal</label>
+
+<select id="goal">
+
+<option value="loss">Weight Loss</option>
+<option value="maintain">Maintain Weight</option>
+<option value="gain">Weight Gain</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>Plan Duration</label>
+
+<select id="months">
+
+<option value="1">1 Month</option>
+<option value="2">2 Months</option>
+<option value="3">3 Months</option>
+<option value="4">4 Months</option>
+<option value="5">5 Months</option>
+<option value="6">6 Months</option>
+<option value="7">7 Months</option>
+<option value="8">8 Months</option>
+<option value="9">9 Months</option>
+<option value="10">10 Months</option>
+
+</select>
+
+</div>
+
+</div>
+
+<button onclick="calculate()">🚀 Generate My Plan</button>
+
+</div>
+
+
+<!-- DASHBOARD -->
+
+<div class="card">
+
+<h2>📊 Health Dashboard</h2>
+
+<div class="dashboard">
+
+<div class="stat">
+
+<h3>BMI</h3>
+
+<strong id="bmiValue">--</strong>
+
+</div>
+
+<div class="stat">
+
+<h3>BMR</h3>
+
+<strong id="bmrValue">--</strong>
+
+</div>
+
+<div class="stat">
+
+<h3>Maintenance</h3>
+
+<strong id="maintenanceValue">--</strong>
+
+</div>
+
+<div class="stat">
+
+<h3>Target Calories</h3>
+
+<strong id="targetValue">--</strong>
+
+</div>
+
+<div class="stat">
+
+<h3>Protein</h3>
+
+<strong id="proteinValue">--</strong>
+
+</div>
+
+<div class="stat">
+
+<h3>Water</h3>
+
+<strong id="waterTarget">--</strong>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- BMI -->
+
+<div class="card bmi-wrapper">
+
+<h2>⚖️ BMI Meter</h2>
+
+<div class="bmi-gauge">
+
+<div class="bmi-inner">
+
+<strong id="bmiNumber">--</strong>
+
+<span id="bmiCategory">Enter details</span>
+
+</div>
+
+</div>
+
+<p id="bmiMessage"></p>
+
+</div>
+
+
+<!-- CALORIE BUDGET -->
+
+<div class="card">
+
+<h2>🔥 Daily Calorie Budget</h2>
+
+<p>Target calories remaining today:</p>
+
+<h1 id="remainingCalories">--</h1>
+
+<div class="progress">
+
+<div class="progress-bar" id="calorieProgress"></div>
+
+</div>
+
+<p id="calorieText">Add food to calculate.</p>
+
+</div>
+
+
+<!-- AI RECOMMENDATION -->
+
+<div class="card">
+
+<h2>🤖 Smart AI-Style Recommendation</h2>
+
+<div class="result-box" id="aiRecommendation">
+
+Enter your details and click Generate My Plan.
+
+</div>
+
+</div>
+
+
+<!-- DIET -->
+
+<div class="card">
+
+<h2>🍽️ Personalized Diet Plan</h2>
+
+<div class="diet-grid">
+
+<div class="diet-card">
+
+<img src="https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=800&q=80">
+
+<div>
+
+<h3>🌅 Breakfast</h3>
+
+<p id="breakfastText">--</p>
+
+</div>
+
+</div>
+
+
+<div class="diet-card">
+
+<img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80">
+
+<div>
+
+<h3>☀️ Lunch</h3>
+
+<p id="lunchText">--</p>
+
+</div>
+
+</div>
+
+
+<div class="diet-card">
+
+<img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=800&q=80">
+
+<div>
+
+<h3>🍎 Snack</h3>
+
+<p id="snackText">--</p>
+
+</div>
+
+</div>
+
+
+<div class="diet-card">
+
+<img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80">
+
+<div>
+
+<h3>🌙 Dinner</h3>
+
+<p id="dinnerText">--</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- NUTRITION -->
+
+<div class="card">
+
+<h2>🥩 Daily Nutrition Targets</h2>
+
+<div class="dashboard">
+
+<div class="stat">
+
+<h3>Protein</h3>
+
+<strong id="proteinTarget">--</strong>
+
+</div>
+
+<div class="stat">
+
+<h3>Carbohydrates</h3>
+
+<strong id="carbTarget">--</strong>
+
+</div>
+
+<div class="stat">
+
+<h3>Fat</h3>
+
+<strong id="fatTarget">--</strong>
+
+</div>
+
+<div class="stat">
+
+<h3>Fiber</h3>
+
+<strong id="fiberTarget">--</strong>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- FOOD CALCULATOR -->
+
+<div class="card">
+
+<h2>🍎 Food Calorie Calculator</h2>
+
+<div class="form-grid">
+
+<div>
+
+<label>Food</label>
+
+<select id="food">
+
+<option value="130">2 Idli - 130 kcal</option>
+<option value="170">1 Dosa - 170 kcal</option>
+<option value="70">1 Egg - 70 kcal</option>
+<option value="200">1 Cup Rice - 200 kcal</option>
+<option value="120">1 Roti - 120 kcal</option>
+<option value="150">1 Cup Dal - 150 kcal</option>
+<option value="100">1 Cup Curd - 100 kcal</option>
+<option value="105">1 Banana - 105 kcal</option>
+<option value="95">1 Apple - 95 kcal</option>
+<option value="170">30g Nuts - 170 kcal</option>
+<option value="250">100g Chicken - 250 kcal</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>Quantity</label>
+
+<input type="number" id="quantity" value="1" min="1">
+
+</div>
+
+</div>
+
+<button onclick="addFood()">➕ Add Food</button>
+
+<div class="result-box">
+
+Today's Food Calories:
+
+<strong id="foodTotal">0</strong> kcal
+
+</div>
+
+</div>
+
+
+<!-- WORKOUT -->
+
+<div class="card">
+
+<h2>🏋️ Workout Planner</h2>
+
+<div class="workout-grid">
+
+<div class="workout">
+
+<h3>Monday</h3>
+
+<p>🚶 30 min Walking</p>
+
+<p>🔥 Light Cardio</p>
+
+</div>
+
+<div class="workout">
+
+<h3>Tuesday</h3>
+
+<p>🏋️ Strength Training</p>
+
+<p>3 Sets × 10 Reps</p>
+
+</div>
+
+<div class="workout">
+
+<h3>Wednesday</h3>
+
+<p>🧘 Yoga</p>
+
+<p>30 Minutes</p>
+
+</div>
+
+<div class="workout">
+
+<h3>Thursday</h3>
+
+<p>🏃 Cardio</p>
+
+<p>30–40 Minutes</p>
+
+</div>
+
+<div class="workout">
+
+<h3>Friday</h3>
+
+<p>🏋️ Full Body</p>
+
+<p>3 Sets × 10 Reps</p>
+
+</div>
+
+<div class="workout">
+
+<h3>Saturday</h3>
+
+<p>🚴 Cycling / Walking</p>
+
+<p>40 Minutes</p>
+
+</div>
+
+<div class="workout">
+
+<h3>Sunday</h3>
+
+<p>😌 Rest & Stretching</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- WORKOUT CALENDAR -->
+
+<div class="card">
+
+<h2>📅 30-Day Workout Calendar</h2>
+
+<div class="calendar" id="calendar"></div>
+
+</div>
+
+
+<!-- WATER -->
+
+<div class="card">
+
+<h2>💧 Water Tracker</h2>
+
+<h3>Daily Target: <span id="waterGoal">--</span> L</h3>
+
+<h1 id="waterAmount">0</h1>
+
+<div class="progress">
+
+<div class="progress-bar" id="waterProgress"></div>
+
+</div>
+
+<button onclick="addWater()">💧 +250 ml</button>
+
+<button onclick="resetWater()">Reset</button>
+
+</div>
+
+
+<!-- SLEEP -->
+
+<div class="card">
+
+<h2>😴 Sleep Tracker</h2>
+
+<div class="form-grid">
+
+<div>
+
+<label>Sleep Hours</label>
+
+<input type="number" id="sleep" min="0" max="24">
+
+</div>
+
+</div>
+
+<button onclick="checkSleep()">Check Sleep</button>
+
+<div class="result-box" id="sleepResult">
+
+Enter your sleep hours.
+
+</div>
+
+</div>
+
+
+<!-- HABITS -->
+
+<div class="card">
+
+<h2>✅ Daily Healthy Habits</h2>
+
+<label>
+<input type="checkbox" class="habit">
+ Drink enough water
+</label>
+
+<label>
+<input type="checkbox" class="habit">
+ Eat fruits / vegetables
+</label>
+
+<label>
+<input type="checkbox" class="habit">
+ Complete workout
+</label>
+
+<label>
+<input type="checkbox" class="habit">
+ Sleep properly
+</label>
+
+<label>
+<input type="checkbox" class="habit">
+ Avoid excessive junk food
+</label>
+
+<button onclick="calculateHabit()">Calculate Habit Score</button>
+
+<div class="result-box">
+
+Habit Score:
+
+<strong id="habitScore">0%</strong>
+
+</div>
+
+</div>
+
+
+<!-- STREAK -->
+
+<div class="card">
+
+<h2>🔥 Fitness Streak</h2>
+
+<h1 id="streak">0 Days</h1>
+
+<button onclick="completeDay()">✅ Complete Today's Plan</button>
+
+<p id="streakMessage"></p>
+
+</div>
+
+
+<!-- BADGES -->
+
+<div class="card">
+
+<h2>🏆 Achievement Badges</h2>
+
+<div class="badges">
+
+<div class="badge" id="badge1">
+
+💧<br>
+Water Starter
+
+</div>
+
+<div class="badge" id="badge2">
+
+🏃<br>
+Workout Beginner
+
+</div>
+
+<div class="badge" id="badge3">
+
+🔥<br>
+7 Day Streak
+
+</div>
+
+<div class="badge" id="badge4">
+
+🥗<br>
+Healthy Eater
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- WEIGHT PROGRESS -->
+
+<div class="card">
+
+<h2>⚖️ Weight Progress</h2>
+
+<div class="form-grid">
+
+<div>
+
+<label>Current Weight</label>
+
+<input type="number" id="progressWeight">
+
+</div>
+
+</div>
+
+<button onclick="saveWeight()">Save Weight</button>
+
+<div class="result-box">
+
+<p id="weightHistory">No weight history yet.</p>
+
+</div>
+
+</div>
+
+
+<!-- MONTH PLAN -->
+
+<div class="card">
+
+<h2>📅 Long-Term Plan</h2>
+
+<div id="monthlyPlan"></div>
+
+</div>
+
+
+<!-- SHOPPING -->
+
+<div class="card">
+
+<h2>🛒 Smart Grocery List</h2>
+
+<div class="result-box">
+
+<ul class="shopping-list" id="shoppingList">
+
+<li>Oats</li>
+<li>Brown Rice</li>
+<li>Wheat Roti</li>
+<li>Eggs</li>
+<li>Chicken</li>
+<li>Dal</li>
+<li>Curd</li>
+<li>Milk</li>
+<li>Bananas</li>
+<li>Apples</li>
+<li>Green Vegetables</li>
+<li>Carrots</li>
+<li>Tomatoes</li>
+<li>Nuts</li>
+<li>Seeds</li>
+
+</ul>
+
+</div>
+
+</div>
+
+
+<!-- DISCLAIMER -->
+
+<div class="card">
+
+<h2>⚠️ Important</h2>
+
+<p>
+
+This planner provides general educational guidance and estimates.
+BMI, calorie and nutrition calculations are not a medical diagnosis.
+For medical conditions, pregnancy, eating disorders, or major dietary
+changes, consult a qualified doctor or registered dietitian.
+
+</p>
+
+</div>
+
+</div>
+
+
+<footer>
+
+Smart Diet & Fitness Planner © 2026
+
+</footer>
+
+
+<script>
+
+/* ==============================
+   GLOBAL VARIABLES
+============================== */
+
+let foodTotal = Number(localStorage.getItem("foodTotal")) || 0;
+
+let water = Number(localStorage.getItem("water")) || 0;
+
+let streak = Number(localStorage.getItem("streak")) || 0;
+
+let weightHistory =
+JSON.parse(localStorage.getItem("weightHistory")) || [];
+
+let targetCalories = 0;
+
+
+/* ==============================
+   CALCULATE HEALTH DATA
+============================== */
+
+function calculate(){
+
+    const age =
+    Number(document.getElementById("age").value);
+
+    const gender =
+    document.getElementById("gender").value;
+
+    const height =
+    Number(document.getElementById("height").value);
+
+    const weight =
+    Number(document.getElementById("weight").value);
+
+    const activity =
+    Number(document.getElementById("activity").value);
+
+    const goal =
+    document.getElementById("goal").value;
+
+    const months =
+    Number(document.getElementById("months").value);
+
+
+    if(!age || !height || !weight){
+
+        alert("Please enter Age, Height and Weight.");
+
+        return;
+
+    }
+
+
+    /* BMI */
+
+    const bmi =
+    weight / Math.pow(height / 100,2);
+
+    document.getElementById("bmiValue")
+    .textContent=bmi.toFixed(1);
+
+    document.getElementById("bmiNumber")
+    .textContent=bmi.toFixed(1);
+
+
+    let category="";
+
+    if(bmi < 18.5){
+
+        category="Underweight";
+
+    }
+    else if(bmi < 25){
+
+        category="Normal";
+
+    }
+    else if(bmi < 30){
+
+        category="Overweight";
+
+    }
+    else{
+
+        category="Obesity";
+
+    }
+
+
+    document.getElementById("bmiCategory")
+    .textContent=category;
+
+
+    document.getElementById("bmiMessage")
+    .textContent=
+    "BMI Category: " + category;
+
+
+    /* BMR */
+
+    let bmr;
+
+    if(gender==="male"){
+
+        bmr =
+        10*weight +
+        6.25*height -
+        5*age +
+        5;
+
+    }
+    else{
+
+        bmr =
+        10*weight +
+        6.25*height -
+        5*age -
+        161;
+
+    }
+
+
+    const maintenance =
+    bmr * activity;
+
+
+    if(goal==="loss"){
+
+        targetCalories =
+        maintenance - 300;
+
+    }
+    else if(goal==="gain"){
+
+        targetCalories =
+        maintenance + 250;
+
+    }
+    else{
+
+        targetCalories =
+        maintenance;
+
+    }
+
+
+    targetCalories =
+    Math.max(1200,Math.round(targetCalories));
+
+
+    document.getElementById("bmrValue")
+    .textContent=Math.round(bmr)+" kcal";
+
+    document.getElementById("maintenanceValue")
+    .textContent=Math.round(maintenance)+" kcal";
+
+    document.getElementById("targetValue")
+    .textContent=targetCalories+" kcal";
+
+
+    /* Nutrition */
+
+    let protein;
+
+    if(goal==="gain"){
+
+        protein=weight*1.6;
+
+    }
+    else if(goal==="loss"){
+
+        protein=weight*1.5;
+
+    }
+    else{
+
+        protein=weight*1.2;
+
+    }
+
+
+    const proteinCalories=protein*4;
+
+    const fatCalories=
+    targetCalories*0.25;
+
+    const fat=
+    fatCalories/9;
+
+    const carbCalories=
+    Math.max(
+        0,
+        targetCalories -
+        proteinCalories -
+        fatCalories
+    );
+
+    const carbs=
+    carbCalories/4;
+
+    const fiber=
+    Math.max(25,weight*0.3);
+
+
+    document.getElementById("proteinValue")
+    .textContent=Math.round(protein)+" g";
+
+    document.getElementById("proteinTarget")
+    .textContent=Math.round(protein)+" g";
+
+    document.getElementById("carbTarget")
+    .textContent=Math.round(carbs)+" g";
+
+    document.getElementById("fatTarget")
+    .textContent=Math.round(fat)+" g";
+
+    document.getElementById("fiberTarget")
+    .textContent=Math.round(fiber)+" g";
+
+
+    /* Water */
+
+    const waterLiters =
+    weight * 0.035;
+
+    document.getElementById("waterTarget")
+    .textContent=waterLiters.toFixed(1)+" L";
+
+    document.getElementById("waterGoal")
+    .textContent=waterLiters.toFixed(1);
+
+
+    /* Diet */
+
+    generateDiet(goal);
+
+
+    /* AI recommendation */
+
+    generateAI(
+        bmi,
+        goal,
+        activity,
+        targetCalories
+    );
+
+
+    /* Monthly plan */
+
+    generateMonthlyPlan(
+        months,
+        goal
+    );
+
+
+    /* Shopping */
+
+    generateShoppingList(goal);
+
+
+    updateCalorieBudget();
+
+
+    localStorage.setItem(
+        "profile",
+        JSON.stringify({
+            age,
+            gender,
+            height,
+            weight,
+            activity,
+            goal,
+            months
+        })
+    );
+
+}
+
+
+/* ==============================
+   DIET
+============================== */
+
+function generateDiet(goal){
+
+    if(goal==="loss"){
+
+        document.getElementById("breakfastText")
+        .textContent=
+        "2 Idli + Sambar + Boiled Egg";
+
+        document.getElementById("lunchText")
+        .textContent=
+        "Brown Rice + Dal + Vegetables + Curd";
+
+        document.getElementById("snackText")
+        .textContent=
+        "Apple + Small handful of Nuts";
+
+        document.getElementById("dinnerText")
+        .textContent=
+        "2 Roti + Vegetable Curry + Salad";
+
+    }
+
+
+    else if(goal==="gain"){
+
+        document.getElementById("breakfastText")
+        .textContent=
+        "Oats + Milk + Banana + Nuts + Eggs";
+
+        document.getElementById("lunchText")
+        .textContent=
+        "Rice + Dal + Chicken + Vegetables + Curd";
+
+        document.getElementById("snackText")
+        .textContent=
+        "Banana Shake + Nuts";
+
+        document.getElementById("dinnerText")
+        .textContent=
+        "Roti + Paneer/Chicken + Vegetables";
+
+    }
+
+
+    else{
+
+        document.getElementById("breakfastText")
+        .textContent=
+        "Dosa + Sambar + Egg";
+
+        document.getElementById("lunchText")
+        .textContent=
+        "Rice + Dal + Vegetables + Curd";
+
+        document.getElementById("snackText")
+        .textContent=
+        "Fruit + Nuts";
+
+        document.getElementById("dinnerText")
+        .textContent=
+        "Roti + Vegetable Curry + Protein";
+
+    }
+
+}
+
+
+/* ==============================
+   AI STYLE RECOMMENDATION
+============================== */
+
+function generateAI(
+    bmi,
+    goal,
+    activity,
+    calories
+){
+
+    let recommendation="";
+
+    if(goal==="loss"){
+
+        recommendation =
+        "Your plan focuses on a moderate calorie deficit, " +
+        "higher protein foods, vegetables, hydration and regular activity. ";
+
+    }
+    else if(goal==="gain"){
+
+        recommendation =
+        "Your plan focuses on adequate calories, protein-rich foods, " +
+        "strength training and consistent meals. ";
+
+    }
+    else{
+
+        recommendation =
+        "Your plan focuses on maintaining your current weight " +
+        "through balanced nutrition and regular physical activity. ";
+
+    }
+
+
+    if(activity <= 1.3){
+
+        recommendation +=
+        "Your selected activity level is relatively low, so gradually increasing daily movement can be useful.";
+
+    }
+    else if(activity >= 1.7){
+
+        recommendation +=
+        "Your selected activity level is high, so adequate food, hydration and recovery are important.";
+
+    }
+    else{
+
+        recommendation +=
+        "Your selected activity level is moderate; consistency with exercise and meals is important.";
+
+    }
+
+
+    recommendation +=
+    " Estimated target: " +
+    calories +
+    " kcal/day.";
+
+
+    document.getElementById("aiRecommendation")
+    .textContent=recommendation;
+
+}
+
+
+/* ==============================
+   FOOD
+============================== */
+
+function addFood(){
+
+    const calories =
+    Number(document.getElementById("food").value);
+
+    const quantity =
+    Number(document.getElementById("quantity").value);
+
+
+    foodTotal +=
+    calories * quantity;
+
+
+    localStorage.setItem(
+        "foodTotal",
+        foodTotal
+    );
+
+
+    document.getElementById("foodTotal")
+    .textContent=foodTotal;
+
+
+    updateCalorieBudget();
+
+}
+
+
+/* ==============================
+   CALORIE BUDGET
+============================== */
+
+function updateCalorieBudget(){
+
+    if(!targetCalories){
+
+        document.getElementById("remainingCalories")
+        .textContent="--";
+
+        return;
+
+    }
+
+
+    const remaining =
+    targetCalories-foodTotal;
+
+
+    document.getElementById("remainingCalories")
+    .textContent=
+    Math.max(0,remaining)+" kcal";
+
+
+    const percentage =
+    Math.min(
+        100,
+        (foodTotal/targetCalories)*100
+    );
+
+
+    document.getElementById("calorieProgress")
+    .style.width=
+    percentage+"%";
+
+
+    document.getElementById("calorieText")
+    .textContent=
+    foodTotal +
+    " / " +
+    targetCalories +
+    " kcal consumed";
+
+}
+
+
+/* ==============================
+   WATER
+============================== */
+
+function addWater(){
+
+    water += 0.25;
+
+    localStorage.setItem(
+        "water",
+        water
+    );
+
+    updateWater();
+
+}
+
+
+function resetWater(){
+
+    water=0;
+
+    localStorage.setItem(
+        "water",
+        water
+    );
+
+    updateWater();
+
+}
+
+
+function updateWater(){
+
+    document.getElementById("waterAmount")
+    .textContent=
+    water.toFixed(2)+" L";
+
+
+    const goal =
+    Number(
+        document.getElementById("waterGoal")
+        .textContent
+    );
+
+
+    if(goal){
+
+        let percentage =
+        Math.min(
+            100,
+            water/goal*100
+        );
+
+        document.getElementById("waterProgress")
+        .style.width=
+        percentage+"%";
+
+    }
+
+}
+
+
+/* ==============================
+   SLEEP
+============================== */
+
+function checkSleep(){
+
+    const hours =
+    Number(document.getElementById("sleep").value);
+
+
+    let message="";
+
+
+    if(hours < 6){
+
+        message=
+        "Your sleep duration is below the commonly recommended range for many adults.";
+
+    }
+    else if(hours < 7){
+
+        message=
+        "Try to gradually improve your sleep routine.";
+
+    }
+    else if(hours <= 9){
+
+        message=
+        "Your sleep duration is within a commonly recommended range for adults.";
+
+    }
+    else{
+
+        message=
+        "You are sleeping longer than the typical adult range; consider your overall routine.";
+
+    }
+
+
+    document.getElementById("sleepResult")
+    .textContent=message;
+
+}
+
+
+/* ==============================
+   HABITS
+============================== */
+
+function calculateHabit(){
+
+    const habits =
+    document.querySelectorAll(".habit");
+
+
+    let completed=0;
+
+
+    habits.forEach(
+        h=>{
+            if(h.checked)
+                completed++;
+        }
+    );
+
+
+    const score =
+    Math.round(
+        completed/habits.length*100
+    );
+
+
+    document.getElementById("habitScore")
+    .textContent=
+    score+"%";
+
+
+    if(score===100){
+
+        document.getElementById("badge4")
+        .classList.add("unlocked");
+
+    }
+
+}
+
+
+/* ==============================
+   STREAK
+============================== */
+
+function completeDay(){
+
+    streak++;
+
+    localStorage.setItem(
+        "streak",
+        streak
+    );
+
+
+    document.getElementById("streak")
+    .textContent=
+    streak+" Days";
+
+
+    document.getElementById("streakMessage")
+    .textContent=
+    "Great! Keep following your plan consistently.";
+
+
+    if(streak >= 7){
+
+        document.getElementById("badge3")
+        .classList.add("unlocked");
+
+    }
+
+}
+
+
+/* ==============================
+   WEIGHT HISTORY
+============================== */
+
+function saveWeight(){
+
+    const weight =
+    Number(
+        document.getElementById("progressWeight").value
+    );
+
+
+    if(!weight){
+
+        alert("Enter your weight.");
+
+        return;
+
+    }
+
+
+    const today =
+    new Date().toLocaleDateString();
+
+
+    weightHistory.push({
+
+        date:today,
+
+        weight:weight
+
+    });
+
+
+    localStorage.setItem(
+        "weightHistory",
+        JSON.stringify(weightHistory)
+    );
+
+
+    displayWeightHistory();
+
+}
+
+
+function displayWeightHistory(){
+
+    if(weightHistory.length===0){
+
+        document.getElementById("weightHistory")
+        .textContent=
+        "No weight history yet.";
+
+        return;
+
+    }
+
+
+    document.getElementById("weightHistory")
+    .innerHTML=
+    weightHistory
+    .map(
+        x =>
+        `${x.date} — ${x.weight} kg`
+    )
+    .join("<br>");
+
+}
+
+
+/* ==============================
+   MONTH PLAN
+============================== */
+
+function generateMonthlyPlan(
+    months,
+    goal
+){
+
+    let html="";
+
+
+    for(let i=1;i<=months;i++){
+
+        let focus="";
+
+
+        if(goal==="loss"){
+
+            focus =
+            i<=2
+            ? "Build healthy eating and walking habits"
+            : i<=5
+            ? "Improve consistency and increase activity"
+            : "Maintain sustainable habits and monitor progress";
+
+        }
+
+        else if(goal==="gain"){
+
+            focus =
+            i<=2
+            ? "Build meal consistency and strength routine"
+            : i<=5
+            ? "Progressively increase strength training"
+            : "Maintain consistent nutrition and recovery";
+
+        }
+
+        else{
+
+            focus =
+            i<=2
+            ? "Build balanced nutrition habits"
+            : i<=5
+            ? "Maintain exercise and meal consistency"
+            : "Long-term healthy lifestyle";
+
+        }
+
+
+        html += `
+
+        <div class="result-box">
+
+        <h3>Month ${i}</h3>
+
+        <p>${focus}</p>
+
+        <p>
+        📌 Track weight<br>
+        💧 Track water<br>
+        🥗 Follow meal plan<br>
+        🏋️ Complete workouts<br>
+        😴 Monitor sleep
+        </p>
+
+        </div>
+
+        `;
+
+    }
+
+
+    document.getElementById("monthlyPlan")
+    .innerHTML=html;
+
+}
+
+
+/* ==============================
+   SHOPPING LIST
+============================== */
+
+function generateShoppingList(goal){
+
+    let list=[];
+
+
+    if(goal==="loss"){
+
+        list=[
+            "Oats",
+            "Brown Rice",
+            "Roti",
+            "Dal",
+            "Eggs",
+            "Curd",
+            "Chicken",
+            "Green Vegetables",
+            "Salad Vegetables",
+            "Apples",
+            "Bananas",
+            "Nuts"
+        ];
+
+    }
+    else if(goal==="gain"){
+
+        list=[
+            "Oats",
+            "Rice",
+            "Milk",
+            "Eggs",
+            "Chicken",
+            "Paneer",
+            "Dal",
+            "Curd",
+            "Bananas",
+            "Peanut Butter",
+            "Nuts",
+            "Seeds"
+        ];
+
+    }
+    else{
+
+        list=[
+            "Rice",
+            "Roti",
+            "Oats",
+            "Dal",
+            "Eggs",
+            "Chicken",
+            "Curd",
+            "Vegetables",
+            "Fruits",
+            "Nuts",
+            "Seeds"
+        ];
+
+    }
+
+
+    document.getElementById("shoppingList")
+    .innerHTML=
+    list
+    .map(item=>`<li>☐ ${item}</li>`)
+    .join("");
+
+}
+
+
+/* ==============================
+   CALENDAR
+============================== */
+
+function createCalendar(){
+
+    const calendar =
+    document.getElementById("calendar");
+
+
+    calendar.innerHTML="";
+
+
+    for(let i=1;i<=30;i++){
+
+        const day =
+        document.createElement("div");
+
+
+        day.className="day";
+
+
+        day.innerHTML=
+        `<strong>Day ${i}</strong><br>
+        🏃 Workout<br>
+        💧 Water<br>
+        🥗 Diet`;
+
+
+        day.onclick=function(){
+
+            day.classList.toggle("done");
+
+        };
+
+
+        calendar.appendChild(day);
+
+    }
+
+}
+
+
+/* ==============================
+   DARK MODE
+============================== */
+
+function toggleDark(){
+
+    document.body.classList.toggle("dark");
+
+
+    localStorage.setItem(
+        "darkMode",
+        document.body.classList.contains("dark")
+    );
+
+}
+
+
+/* ==============================
+   LOAD SAVED DATA
+============================== */
+
+function loadData(){
+
+    document.getElementById("foodTotal")
+    .textContent=foodTotal;
+
+
+    document.getElementById("streak")
+    .textContent=
+    streak+" Days";
+
+
+    displayWeightHistory();
+
+
+    createCalendar();
+
+
+    if(localStorage.getItem("darkMode")==="true"){
+
+        document.body.classList.add("dark");
+
+    }
+
+
+    const profile =
+    JSON.parse(
+        localStorage.getItem("profile")
+    );
+
+
+    if(profile){
+
+        document.getElementById("age")
+        .value=profile.age;
+
+        document.getElementById("gender")
+        .value=profile.gender;
+
+        document.getElementById("height")
+        .value=profile.height;
+
+        document.getElementById("weight")
+        .value=profile.weight;
+
+        document.getElementById("activity")
+        .value=profile.activity;
+
+        document.getElementById("goal")
+        .value=profile.goal;
+
+        document.getElementById("months")
+        .value=profile.months;
+
+        calculate();
+
+    }
+
+
+    updateWater();
+
+}
+
+
+/* ==============================
+   INITIALIZE
+============================== */
+
+loadData();
+
+</script>
+
+</body>
+</html>
